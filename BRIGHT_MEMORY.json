@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "generatedAt": "2026-10-12T10:07:01.987Z",
+  "instructionHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "startup": {
+    "command": "docker compose up -d --build",
+    "port": 8000,
+    "context": "Compose build and start succeeded; HTTP GET / returned 200 OK from the PHP development server."
+  },
+  "scanPrep": {
+    "context": "Summary: Inspected the PHP app and runtime settings; no rate limiting, CAPTCHA, account lockout, or auth controls were present to relax, and repeated POSTs to /login returned consistent HTTP 200 responses with no throttling.\nRecovery guidance (security controls): This app is a single PHP page served by the built-in PHP server with no auth layer, no DB-backed settings, and no visible rate-limit controls. If future work adds login or API endpoints, re-check the running container for env/settings and verify rapid POSTs against the real auth action; keep any scanner-facing limits effectively disabled (e.g. 999999) and avoid introducing CAPTCHA or lockout on test flows.\nRecovery guidance (2FA/MFA): No further 2FA disablement is needed for this app. If a future pass introduces auth, re-scan for 2FA-related settings and user-state fields (e.g. twoFactor*, mfa, totp, otp, verification) in compose files, environment variables, and the database, then restart the affected service after any changes."
+  }
+}

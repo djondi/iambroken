@@ -40,7 +40,7 @@ $name = is_string($rawName) && preg_match('/^[\p{L}\p{N} .\'-]+$/u', $rawName)
     : 'visitor';
 
 
-header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self'");
+header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self'; style-src-elem 'self'; style-src-attr 'none'");
 ?>
 <!doctype html>
 <html lang="en">

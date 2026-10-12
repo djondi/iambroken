@@ -14,9 +14,16 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $name = in_array($method, ['GET', 'HEAD'], true) ? ($_GET['name'] ?? 'visitor') : 'visitor';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
-    header('Allow: GET, HEAD, POST, PUT, PATCH, OPTIONS');
+    header('Allow: GET, HEAD, OPTIONS');
     header('Content-Length: 0');
     http_response_code(204);
+    exit;
+}
+
+if (!in_array($method, ['GET', 'HEAD'], true)) {
+    header('Allow: GET, HEAD, OPTIONS');
+    header('Content-Length: 0');
+    http_response_code(405);
     exit;
 }
 

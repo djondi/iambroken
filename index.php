@@ -12,6 +12,13 @@
  */
 $name = $_GET['name'] ?? 'visitor';
 
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
+    header('Allow: GET, HEAD, POST, PUT, PATCH, OPTIONS');
+    header('Content-Length: 0');
+    http_response_code(204);
+    exit;
+}
+
 header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'");
 ?>
 <!doctype html>

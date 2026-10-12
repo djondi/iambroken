@@ -19,6 +19,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+$requestBody = file_get_contents('php://input');
+if ($requestBody !== false && $requestBody !== '') {
+    header('Allow: GET, HEAD, OPTIONS');
+    header('Content-Length: 0');
+    http_response_code(400);
+    exit;
+}
+
 if (!in_array($method, ['GET', 'HEAD'], true)) {
     header('Allow: GET, HEAD, OPTIONS');
     header('Content-Length: 0');

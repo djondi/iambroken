@@ -26,7 +26,7 @@ if (!in_array($method, ['GET', 'HEAD'], true)) {
     exit;
 }
 
-$name = $_GET['name'] ?? 'visitor';
+$name = strip_tags($_GET['name'] ?? 'visitor');
 
 header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'");
 ?>

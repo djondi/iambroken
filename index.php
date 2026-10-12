@@ -32,7 +32,7 @@ $name = is_string($rawName) && preg_match('/^[\p{L}\p{N} .\'-]+$/u', $rawName)
     : 'visitor';
 
 
-header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'");
+header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self'");
 ?>
 <!doctype html>
 <html lang="en">
@@ -40,14 +40,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-s
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bright DAST - Tiny Test App</title>
-  <style>
-    body { font: 16px system-ui, sans-serif; max-width: 580px; margin: 70px auto; padding: 0 20px; line-height: 1.6; }
-    input, button { font: inherit; padding: 8px 12px; }
-    input { width: 60%; }
-    button { cursor: pointer; }
-    .result { background: #f1f5f9; padding: 16px; border-radius: 8px; margin-top: 20px; }
-    small { color: #666; }
-  </style>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <h1>Tiny Bright DAST Test</h1>

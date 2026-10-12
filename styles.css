@@ -1,0 +1,6 @@
+body { font: 16px system-ui, sans-serif; max-width: 580px; margin: 70px auto; padding: 0 20px; line-height: 1.6; }
+input, button { font: inherit; padding: 8px 12px; }
+input { width: 60%; }
+button { cursor: pointer; }
+.result { background: #f1f5f9; padding: 16px; border-radius: 8px; margin-top: 20px; }
+small { color: #666; }

@@ -7,11 +7,13 @@
  * Start: php -S 127.0.0.1:8000 index.php
  * Visit: http://127.0.0.1:8000/
  *
- * Reflected Cross-Site Scripting (XSS) protected by output encoding.
+ * Reflected Cross-Site Scripting (XSS) protected by HTML escaping.
  * - The `name` GET parameter is safely escaped before being rendered.
  */
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$name = in_array($method, ['GET', 'HEAD'], true) ? ($_GET['name'] ?? 'visitor') : 'visitor';
+$name = in_array($method, ['GET', 'HEAD'], true)
+    ? htmlspecialchars($_GET['name'] ?? 'visitor', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+    : 'visitor';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
     header('Allow: GET, HEAD, OPTIONS');
@@ -53,7 +55,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-s
     <button type="submit">Greet me</button>
   </form>
   <div class="result">
-    Hello, <?php echo htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>!
+    Hello, <?php echo $name; ?>!
   </div>
   <p><small>Intentionally vulnerable training application. Never deploy publicly.</small></p>
 </body>

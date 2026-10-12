@@ -11,7 +11,7 @@
  * - The `name` GET parameter is printed into HTML without escaping.
  * - Remediation: use htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').
  */
-$name = $_GET['name'] ?? 'visitor';
+$name = htmlspecialchars($_GET['name'] ?? 'visitor', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 ?>
 <!doctype html>
 <html lang="en">

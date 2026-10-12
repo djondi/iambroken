@@ -26,7 +26,11 @@ if (!in_array($method, ['GET', 'HEAD'], true)) {
     exit;
 }
 
-$name = strip_tags($_GET['name'] ?? 'visitor');
+$rawName = $_GET['name'] ?? 'visitor';
+$name = is_string($rawName) && preg_match('/^[\p{L}\p{N} .\'-]+$/u', $rawName)
+    ? trim($rawName)
+    : 'visitor';
+
 
 header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'");
 ?>

@@ -7,11 +7,40 @@
  * Start: php -S 127.0.0.1:8000 index.php
  * Visit: http://127.0.0.1:8000/
  *
- * Intentional vulnerability: Reflected Cross-Site Scripting (XSS)
- * - The `name` GET parameter is printed into HTML without escaping.
- * - Remediation: use htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').
+ * Reflected Cross-Site Scripting (XSS) protected by HTML escaping.
+ * - User input is escaped at the sink before being rendered.
  */
-$name = $_GET['name'] ?? 'visitor';
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
+    header('Allow: GET, HEAD, OPTIONS');
+    header('Content-Length: 0');
+    http_response_code(204);
+    exit;
+}
+
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+$requestBody = file_get_contents('php://input');
+if ($requestBody !== false && $requestBody !== '') {
+    header('Allow: GET, HEAD, OPTIONS');
+    header('Content-Length: 0');
+    http_response_code(400);
+    exit;
+}
+
+if (!in_array($method, ['GET', 'HEAD'], true)) {
+    header('Allow: GET, HEAD, OPTIONS');
+    header('Content-Length: 0');
+    http_response_code(405);
+    exit;
+}
+
+$rawName = $_GET['name'] ?? 'visitor';
+$name = is_string($rawName) && preg_match('/^[\p{L}\p{N} .\'-]+$/u', $rawName)
+    ? trim($rawName)
+    : 'visitor';
+
+
+header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self'; style-src-elem 'self'; style-src-attr 'none'");
 ?>
 <!doctype html>
 <html lang="en">
@@ -19,14 +48,7 @@ $name = $_GET['name'] ?? 'visitor';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bright DAST - Tiny Test App</title>
-  <style>
-    body { font: 16px system-ui, sans-serif; max-width: 580px; margin: 70px auto; padding: 0 20px; line-height: 1.6; }
-    input, button { font: inherit; padding: 8px 12px; }
-    input { width: 60%; }
-    button { cursor: pointer; }
-    .result { background: #f1f5f9; padding: 16px; border-radius: 8px; margin-top: 20px; }
-    small { color: #666; }
-  </style>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <h1>Tiny Bright DAST Test</h1>
@@ -37,8 +59,7 @@ $name = $_GET['name'] ?? 'visitor';
     <button type="submit">Greet me</button>
   </form>
   <div class="result">
-    <!-- INTENTIONALLY UNSAFE: reflected XSS for authorized security testing -->
-    Hello, <?php echo $name; ?>!
+    Hello, <?php echo htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>!
   </div>
   <p><small>Intentionally vulnerable training application. Never deploy publicly.</small></p>
 </body>

@@ -7,11 +7,10 @@
  * Start: php -S 127.0.0.1:8000 index.php
  * Visit: http://127.0.0.1:8000/
  *
- * Intentional vulnerability: Reflected Cross-Site Scripting (XSS)
- * - The `name` GET parameter is printed into HTML without escaping.
- * - Remediation: use htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').
+ * Reflected Cross-Site Scripting (XSS) protected by output encoding.
+ * - The `name` GET parameter is safely escaped before being rendered.
  */
-$name = htmlspecialchars($_GET['name'] ?? 'visitor', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$name = $_GET['name'] ?? 'visitor';
 ?>
 <!doctype html>
 <html lang="en">
@@ -37,8 +36,7 @@ $name = htmlspecialchars($_GET['name'] ?? 'visitor', ENT_QUOTES | ENT_SUBSTITUTE
     <button type="submit">Greet me</button>
   </form>
   <div class="result">
-    <!-- INTENTIONALLY UNSAFE: reflected XSS for authorized security testing -->
-    Hello, <?php echo $name; ?>!
+    Hello, <?php echo htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>!
   </div>
   <p><small>Intentionally vulnerable training application. Never deploy publicly.</small></p>
 </body>

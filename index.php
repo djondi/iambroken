@@ -10,7 +10,8 @@
  * Reflected Cross-Site Scripting (XSS) protected by output encoding.
  * - The `name` GET parameter is safely escaped before being rendered.
  */
-$name = $_GET['name'] ?? 'visitor';
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$name = in_array($method, ['GET', 'HEAD'], true) ? ($_GET['name'] ?? 'visitor') : 'visitor';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
     header('Allow: GET, HEAD, POST, PUT, PATCH, OPTIONS');

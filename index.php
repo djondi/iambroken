@@ -8,13 +8,8 @@
  * Visit: http://127.0.0.1:8000/
  *
  * Reflected Cross-Site Scripting (XSS) protected by HTML escaping.
- * - The `name` GET parameter is safely escaped before being rendered.
+ * - User input is escaped at the sink before being rendered.
  */
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$name = in_array($method, ['GET', 'HEAD'], true)
-    ? htmlspecialchars($_GET['name'] ?? 'visitor', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
-    : 'visitor';
-
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
     header('Allow: GET, HEAD, OPTIONS');
     header('Content-Length: 0');
@@ -22,12 +17,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
     exit;
 }
 
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
 if (!in_array($method, ['GET', 'HEAD'], true)) {
     header('Allow: GET, HEAD, OPTIONS');
     header('Content-Length: 0');
     http_response_code(405);
     exit;
 }
+
+$name = $_GET['name'] ?? 'visitor';
 
 header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'");
 ?>
@@ -55,7 +54,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'none'; object-s
     <button type="submit">Greet me</button>
   </form>
   <div class="result">
-    Hello, <?php echo $name; ?>!
+    Hello, <?php echo htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>!
   </div>
   <p><small>Intentionally vulnerable training application. Never deploy publicly.</small></p>
 </body>
